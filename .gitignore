@@ -1,0 +1,5 @@
+.py[cod]
+*$py.class
+build
+*.egg
+*.egg-info
