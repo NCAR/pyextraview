@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import extraview
+from . import extraview
 import os
 from nfile import read_file_first_line
        

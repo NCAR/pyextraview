@@ -3,3 +3,6 @@
 build
 *.egg
 *.egg-info
+.cache
+__pycache__
+*.bak

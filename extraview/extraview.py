@@ -108,7 +108,7 @@ class client:
 	 """
 
          fields = self.get_field_allowed(field, parentfield, parentvalue)
-	 for efield, evalue in fields.iteritems():
+	 for efield, evalue in fields.items():
 	     if evalue.lower() == value.lower():
 		 return efield
 
@@ -144,7 +144,7 @@ class client:
 	if members is None or user is None:
 	    return None
 
-	for member, name in members.iteritems():
+	for member, name in members.items():
 	    if name.lower() == user.lower():
 		return name;
 
