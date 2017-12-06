@@ -4,7 +4,9 @@ import argparse
 import requests
 import xml.etree.ElementTree
 import re
-from nlog import vlog,die_now
+from .log import vlog,die_now
+from .file import read_file_first_line
+from .cli import open_extraview
 
 class client:
     """ Extraview Client """
@@ -303,3 +305,4 @@ class client:
         params.update(fields)
     
         return self.update(id, params)
+
