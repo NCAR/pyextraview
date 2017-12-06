@@ -15,14 +15,5 @@ def connect():
     with open(config_path, 'r') as f:
         config = json.loads(f.read())
 
-    vlog(3, config)
-
-    #if not ev_user:
-    #    ev_user = read_file_first_line("%s/.ev/user" % home )
-    #if not ev_pass:
-    #    ev_pass = read_file_first_line("%s/.ev/password" % home )
-    #if not ev_url:
-    #    ev_url = read_file_first_line("%s/.ev/server" % home )
-
-    #return extraview.client(ev_user, ev_pass, ev_url)
+    return extraview.client(config)
 

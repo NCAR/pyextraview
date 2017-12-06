@@ -9,18 +9,12 @@ from .file import read_file_first_line
 
 class client:
     """ Extraview Client """
-    
-    user	= None
-    password	= None
-    url		= None
+    config	 = None
     fields_cache = {}
     """ Cache of Extraview fields """
-    
-    
-    def __init__(self, user, password, url):
-        self.user = user
-        self.password = password
-        self.url = url
+
+    def __init__(self, config):
+        self.config = config
     
     def http_get(self, params):
         """ Perform a get request against extraview
@@ -28,12 +22,13 @@ class client:
             params: get parameters to hand to extraview
         """
         _params = {
-        	'user_id': self.user,
-        	'password': self.password,
+        	'user_id': config['user'],
+        	'password': config['password'],
             }
         _params.update(params)
          
-        return requests.get(self.url, params=_params)
+        return requests.get(config['url'], params=_params)
+
     def http_get_xml(self, params):
         """ Perform a get request against extraview that will return XML format
             return request object
