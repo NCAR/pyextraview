@@ -2,7 +2,10 @@
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 import argparse
 import requests
-import xml.etree.ElementTree
+try:
+        import xml.etree.cElementTree as ET
+except ImportError:
+        import xml.etree.ElementTree as ET
 import re
 from .log import vlog,die_now
 from .file import read_file_first_line
@@ -22,12 +25,12 @@ class client:
             params: get parameters to hand to extraview
         """
         _params = {
-        	'user_id': config['user'],
-        	'password': config['password'],
+        	'user_id': self.config['server']['user'],
+        	'password': self.config['server']['password'],
             }
         _params.update(params)
          
-        return requests.get(config['url'], params=_params)
+        return requests.get(self.config['server']['url'], params=_params)
 
     def http_get_xml(self, params):
         """ Perform a get request against extraview that will return XML format
@@ -36,7 +39,7 @@ class client:
         """
     
         r = self.http_get(params)
-        return xml.etree.ElementTree.fromstring(r.text)
+        return ET.fromstring(r.text)
         #xml.etree.ElementTree.dump(b)
     
     def split_results(self, result):
@@ -159,7 +162,6 @@ class client:
         @param description Issue description
         @param fields array of fields to set (can override defaults)
         @param error set if return is false with EV error
-        @param EVSETUP extraview setup array
         @return ev response or FALSE on error
         @see http://docs.extraview.com/site/extraview-64/application-programming-interface/insert 
         """
@@ -167,21 +169,11 @@ class client:
             'statevar':	    'insert',
             #'p_template_file' => 'file.html',
             'username_display': 'ID',
-            'send_email':	    'no',
-            'AREA':		    1, #cisl
-            'PROJECT':	    1, #help desk 
             'HELP_LOGIN':	    originator,
-            'REQUESTOR_NAME':   'auto',
-            'PRIORITY':	    'P3', #Regular
-            'REQUESTOR_EMAIL':  'donotreply@ucar.edu',
-            'HELP_TYPE':	    67, #CISL
-            'CONTACT_PHONE':    '303-497-2400',
-            'SUBMISSION_TYPE':  227, #Web
             'SHORT_DESCR':	    title,
             'DESCRIPTION':	    description
-            #'EMAIL_CUSTOMER' => 'user@example.com',
-            #'HELP_CUST_EMAIL_2' => 'user@example.com'
         }
+        self.resolve_config_fields(params, self.config['create'])
         params.update(fields)
     
         grpid = self.get_group_id(group);
@@ -272,13 +264,23 @@ class client:
         """ Get EV priority field value from string priority"""
         return self.get_field_value_to_field_key('PRIORITY', priority)
     
+    def resolve_config_fields(self, params, config_params):
+        """ Auto resolve out config Param fields that are marked with a * at start of name """
+
+        for key, value in config_params.items():
+            if key[0] == '*':
+                field = key[1:]
+                params[key[1:]] = self.get_field_value_to_field_key(field, value) 
+            else:
+                params[key] = value
+
     def close(self, id, comment, fields = {}):
         """ Close extraview ticket """
         params = {
             'STATUS':			'CLOSED',
             'HELP_CUSTOMER_COMMENTS':	comment,
-            'HELP_CLOSURE_CODE':	self.get_field_value_to_field_key('HELP_CLOSURE_CODE', 'Successful') 
         }
+        self.resolve_config_fields(params, self.config['close'])
         params.update(fields)
     
         return self.update(id, params)
@@ -291,6 +293,7 @@ class client:
         params.update(fields)
     
         return self.update(id, params)
+
     def add_user_comment(self, id, comment, fields = {}):
         """ add comment to user in extraview ticket """
         params = {
@@ -300,3 +303,16 @@ class client:
     
         return self.update(id, params)
 
+    def get_issue(self, id):
+        """
+        @brief Retrieve Extraview Issue
+        @param id Extraview issue id
+        @return XML array of issue or FALSE on error
+        """
+        params = {
+            'statevar':	'get',
+            'id':	id
+        }              
+    
+        return self.http_get_xml(params)
+ 

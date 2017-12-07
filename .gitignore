@@ -6,3 +6,4 @@ build
 .cache
 __pycache__
 *.bak
+*.swp
