@@ -33,12 +33,15 @@ class BasicTestSuite(unittest.TestCase):
         assert s
         #ElementTree.dump(s)
 
+        assert EV.add_resolver_comment(id, ct['resolver comment'])
+        assert EV.add_user_comment(id, ct['user comment'])
+        assert EV.add_user_comment(id, ct['user comment'])
+        cta = ct['assign']
+        assert EV.assign_group(id, cta['group'], cta['user'])
+
         self.assertEqual(s.find('ID').text, id)
 
-        EV.close(id, ct['close']['comment'])
-
-        assert 0
-
+        assert EV.close(id, ct['close']['comment'])
 
 if __name__ == '__main__':
     unittest.main()
