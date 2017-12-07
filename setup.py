@@ -16,4 +16,10 @@ setup(
     url='https://github.com/nateucar/pyextraview',
     license=license,
     packages=find_packages('extraview'),
+    entry_points={
+	    'console_scripts': [
+		'ev_create = extraview.cli:create',
+		'ev_close = extraview.cli:close',
+	],
+    }
 )
