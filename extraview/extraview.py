@@ -174,7 +174,7 @@ class client:
             'DESCRIPTION':	    description
         }
         self.resolve_config_fields(params, self.config['create'])
-        params.update(fields)
+        self.resolve_config_fields(params, fields)
     
         grpid = self.get_group_id(group);
         if not grpid is None:
@@ -232,7 +232,7 @@ class client:
             'STATUS':		    'TRANSFERRED',
             'HELP_ASSIGN_GROUP':    grpid
         }              
-        params.update(fields)
+        self.resolve_config_fields(params, fields)
     
         if not user is None:
             params['ASSIGNED_TO']   = user

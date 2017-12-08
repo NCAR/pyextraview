@@ -20,6 +20,10 @@ setup(
 	    'console_scripts': [
 		'ev_create = extraview.cli:create',
 		'ev_close = extraview.cli:close',
+		'ev_assign = extraview.cli:assign',
+		'ev_comment = extraview.cli:comment',
+		'ev_view = extraview.cli:view',
+		'ev_search = extraview.cli:search'
 	],
     }
 )
