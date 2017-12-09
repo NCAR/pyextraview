@@ -162,6 +162,8 @@ def view():
                     dump_ticket('full', result)
                 elif args['--last']:
                     dump_ticket('last', result)
+                else:
+                    dump_ticket('brief', result)
             else:
                 vlog(1, 'Error getting ticket %s' % (id))
                 ret += 1
