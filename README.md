@@ -65,4 +65,4 @@ The server stanza provides details on which server to connect to and which user 
 
 The create stanza allows you set default fields when creating a new ticket. The close stanza does the same for when closing tickets. 
 
-Note that any field that starts with a '*' is expected to be an Extraview enumeration that will be auto resolved. For unknown reasons, Extraview requires the connecting API to resolve out the magic numbers used in enumerations. Use ```ev_view -d ${EV ID}``` to see what are the possible fields that can be provided to the configuration.
+Note that any field that starts with a '*' character is expected to be an Extraview enumeration that will be auto resolved. For unknown reasons, Extraview requires the connecting API to resolve out the magic numbers used in enumerations. Use ```ev_view -d ${EV ID}``` to see what are the possible fields that can be provided to the configuration.
