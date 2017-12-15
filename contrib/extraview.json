@@ -1,0 +1,17 @@
+{
+    "server": {
+	"password": "{INSERT PASSWORD HERE}",
+	"url": "https://{INSERT EXTRAVIEW HOSTNAME}/evj/ExtraView/ev_api.action?",
+	"user": "{INSERT USER HERE}"
+    },
+    "create": {
+            "send_email": "no",
+            "REQUESTOR_NAME": "{INSERT YOUR USER NAME}",
+            "*PRIORITY": "{INSERT DEFAULT PRIORITY}",
+            "REQUESTOR_EMAIL": "{INSERT EMAIL}",
+            "CONTACT_PHONE": "{INSERT PHONE}"
+    },
+    "close": {
+            "*HELP_CLOSURE_CODE": "Successful"
+    }
+}
