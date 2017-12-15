@@ -3,6 +3,10 @@ This python module provides an wrapper API to query an existing Extraview server
 
 Requirements:
 * A user be setup on the Extraview server, usually in the resolver role.
+  * Sockets connectivity to Extraview server API (usually in /evj/ExtraView/ev_api.action on the webserver).
+* Python3
+* [PIP](https://pypi.python.org/pypi/pip)
+* make
 
 Tools Provided:
 * ev_assign
@@ -19,5 +23,12 @@ Tools Provided:
   * View specific tickets in multiple formats.
   
 Setup:
-
+1. Clone the repo
+  ```bash
+  user@host# git clone https://github.com/NCAR/pyextraview.git
+  ```
+2. Call make to install 
+  ```bash
+  user@host# make
+  ```
  
