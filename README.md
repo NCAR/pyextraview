@@ -5,7 +5,7 @@ This python module provides an wrapper API to query an existing Extraview server
 * A user be setup on the Extraview server, usually in the resolver role.
   * Sockets connectivity to Extraview server API (usually in /evj/ExtraView/ev_api.action on the webserver).
 * Python3
-* [PIP](https://pypi.python.org/pypi/pip)
+* [PIP](https://pypi.python.org/pypi/pip) or [easy_install](https://pypi.python.org/pypi/setuptools)
 * make
 
 ## Tools Provided:
