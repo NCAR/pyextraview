@@ -1,0 +1,38 @@
+{
+    "server": {
+	"password": "{INSERT PASSWORD HERE}",
+	"url": "https://cislcustomersupport.ucar.edu/evj/ExtraView/ev_api.action?",
+	"user": "{INSERT USER HERE}"
+    },
+    "create": {
+            "send_email": "no",
+            "*AREA": "CISL",
+            "*PROJECT": "CISL Help Desk",
+            "REQUESTOR_NAME": "auto",
+            "*PRIORITY": "Regular",
+            "REQUESTOR_EMAIL": "donotreply@ucar.edu",
+            "*HELP_TYPE": "CISL",
+            "CONTACT_PHONE": "303-497-2400",
+            "*SUBMISSION_TYPE": "Web"
+    },
+    "close": {
+            "*HELP_CLOSURE_CODE": "Successful"
+    },    
+    "test": {
+	 "create": {
+		"originator": "nate",
+		"group": "ssg",
+		"user": "nate",
+		"title": "test EV ticket",
+		"description": "test EV ticket. Please ignore"
+	},
+        "close": { "comment": "Closing test ticket" },
+        "resolver comment": "test add resolver comment",
+        "user comment": "test add user comment",
+        "assign": { 
+	    "group": "ssg",
+	    "user": "nate" 
+	}
+ 
+    }
+}
