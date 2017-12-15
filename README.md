@@ -31,6 +31,13 @@ This python module provides an wrapper API to query an existing Extraview server
   ```bash
   user@host# make
   ```
+  * On distros where python2 is favored over python3:
+    ```bash
+    $ zypper install python3-setuptools #SLES
+    $ easy_install-3.4 pip
+    $ pip3 install -r requirements.txt 
+    $ pip3 install . 
+    ```
 3. Add Extraview configuration 
   ```bash
   user@host# cp contrib/extraview.json ~/extraview.json
