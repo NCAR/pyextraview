@@ -43,7 +43,8 @@ setup(
     author_email='nate@ucar.edu',
     url='https://github.com/nateucar/pyextraview',
     license=license,
-    packages=find_packages('extraview'),
+    packages=['extraview'],
+    package_dir={'extraview': 'extraview'},
     entry_points={
 	    'console_scripts': [
 		'ev_create = extraview.cli:create',
