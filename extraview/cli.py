@@ -376,13 +376,12 @@ def close():
         -h, --help
     """ 
     args = docopt.docopt(close.__doc__)
-    result = 0
+    ret = 0
 
     EV = connect()
     for id in args['ID'].split(','):
-        ret = EV.close( id, args['COMMENT'] )
+        result = EV.close( id, args['COMMENT'] )
 
-        vlog(4, 'Result: %s %s' % (result.status_code, result.text))
         if result.status_code == requests.codes.ok and result.text.find("Exception") == -1:
             vlog(2, 'Closed %s' % (id))
         else:
