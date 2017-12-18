@@ -35,6 +35,7 @@ import docopt
 import requests
 import re
 from datetime import datetime
+from datetime import timedelta
 from . import extraview
 from .log import vlog
 import pkg_resources
@@ -61,12 +62,23 @@ def dump_ticket(dump_format, xml):
 
     dump_format: last, brief, detail, xml, full
     """
-
+    def totext(arg):
+        """ Gets text from XML object """
+        if arg is None or arg.text is None:
+            return "None"
+        else:
+            return arg.text
     def dump_title():
         """ Prints brief title for ticket """
         print(
             "{0: <10} {1: >15} {2: >10}/{3: <10} {4: >20} {5: >20} {6: <100}".format(
-                id, status, group, user, host, vticket, desc,
+                id,
+                status,
+                group,
+                user,
+                host,
+                vticket,
+                desc,
         )) 
     def dump_comment(lastonly):
         parse_comment(xml.find("COMMENTS").text, "Resolver Comment")
@@ -121,13 +133,13 @@ def dump_ticket(dump_format, xml):
                 'text': "\n".join(txt)
             }) 
 
-    id      = xml.find('ID').text
-    status  = xml.find('STATUS').text
-    group   = xml.find('HELP_ASSIGN_GROUP').text
-    user    = xml.find('ASSIGNED_TO').text
-    host    = xml.find('HELP_HOSTNAME_OTHER').text
-    vticket = xml.find('HELP_VENDOR_TICKET').text
-    desc    = xml.find('SHORT_DESCR').text 
+    id      = totext(xml.find('ID'))
+    status  = totext(xml.find('STATUS'))
+    group   = totext(xml.find('HELP_ASSIGN_GROUP'))
+    user    = totext(xml.find('ASSIGNED_TO'))
+    host    = totext(xml.find('HELP_HOSTNAME_OTHER'))
+    vticket = totext(xml.find('HELP_VENDOR_TICKET'))
+    desc    = totext(xml.find('SHORT_DESCR'))
     msgs    = {} #messages by time
  
     if host is None:
@@ -197,10 +209,85 @@ def view():
                 ret += 1
     sys.exit(ret)
 
-def search():
-    print("Deferred implementation.")
-    sys.exit(1)
 
+#/ssg/bin/ev_search {group|} {user|} {keyword|} {status [Assigned|Transferred|Stalled|Closed]}
+
+def search():
+    """
+    Search Extraview Tickets
+
+    Usage:
+        ev_search [-b | --brief | -l | --last | -d | --detail | -x | --xml | -f | --full] GROUP [USER] [KEYWORD] [STATUS]
+        ev_search (-b | --brief | -l | --last | -d | --detail | -x | --xml | -f | --full) [-g GROUP | --group GROUP] [-u USER | --user USER] [-k KEYWORD | --keyword KEYWORD] [-s STATUS | --status STATUS] [-m MAX | --max MAX] [--days DAYS]
+        ev_search (-h | --help)
+
+    Arguments:
+        GROUP           Search for tickets assigned to this group
+        USER            Search for tickets assigned to this user
+        KEYWORD         Search for any ticket with this keyword
+        STATUS          Search for any ticket with this status. Can be Assigned, Transferred, Stalled, or Closed.
+
+    Options:
+        -h, --help
+        -g, --group     Search for tickets assigned to this group 
+        -u, --user      Search for tickets assigned to this user 
+        -k, --keyword   Search for any ticket with this status. Can be Assigned, Transferred, Stalled, or Closed. 
+        -s, --status    Search for tickets assigned to this group 
+        -m, --max       Maxium number of tickets to search against (Default: 200)
+        --days          Maxium number of days to search against ticket open date (Default: 365 days)
+        -f, --full      Print generally most useful information in ticket 
+        -d, --detail    Print all known content of Extraivew ticket
+        -b, --brief     Print very brief description of ticket
+        -l, --last      Print last update to ticket
+        -x, --xml       Print xml content of ticket
+    """ 
+    args = docopt.docopt(search.__doc__)
+    ret = 0
+    found = 0
+
+    EV = connect()
+    max_tickets = 200
+    max_days = 365
+    fields = { }              
+
+    if args['--max']:
+        max_tickets= int(args['--max']) 
+    if args['DAYS']:
+        max_days  = int(args['DAYS'])  
+    if args['GROUP']:
+        fields['*HELP_ASSIGN_GROUP'] = args['GROUP']
+    if args['USER']:
+        fields['*ASSIGNED_TO'] = args['USER']
+    if args['KEYWORD']:
+        fields['keyword'] = args['KEYWORD']
+    if args['STATUS']:
+        fields['*STATUS'] = args['STATUS']
+
+    fields['date'] = '-%s' % (datetime.isoformat( datetime.today() - timedelta(days=1) ))
+ 
+    result = EV.search(fields, max_tickets)
+    for ticket in result.iterfind('PROBLEM_RECORD'):
+        found += 1
+        if args['--xml']:
+            dump_ticket('xml', ticket)
+        elif args['--brief']:
+            dump_ticket('brief', ticket)
+        elif args['--detail']:
+            dump_ticket('detail', ticket)
+        elif args['--full']:
+            dump_ticket('full', ticket)
+        elif args['--last']:
+            dump_ticket('last', ticket)
+        else:
+            dump_ticket('brief', ticket) 
+
+    if not found:
+        ElementTree.dump(result)
+        vlog(1, 'Nothing found.')
+        ret += 1 
+    
+    sys.exit(ret)
+ 
 def comment():
     """
     Add Resolver Comment to Extraview Ticket

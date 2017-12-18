@@ -28,7 +28,6 @@
 #WHETHER IN CONTRACT, STRICT LIABILITY,
 #OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import argparse
 import requests
 try:
         import xml.etree.cElementTree as ET
@@ -284,7 +283,7 @@ class client:
             'record_count':	'1',
             'page_length':	max, 
         }              
-        params.update(fields)
+        self.resolve_config_fields(params, fields)
     
         return self.http_get_xml(params)
     
