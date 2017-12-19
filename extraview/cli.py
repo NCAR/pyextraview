@@ -229,18 +229,18 @@ def search():
 
     Options:
         -h, --help
-        -g, --group     Search for tickets assigned to this group 
-        -u, --user      Search for tickets assigned to this user 
-        -k, --keyword   Search for any ticket with this status. Can be Assigned, Transferred, Stalled, or Closed. 
-        -s, --status    Search for tickets assigned to this group 
+        -g, --group     Search for tickets assigned to this group
+        -u, --user      Search for tickets assigned to this user
+        -k, --keyword   Search for any ticket with this keyword.
+        -s, --status    Can be Assigned, Transferred, Stalled, Closed, or All.
         -m, --max       Maxium number of tickets to search against (Default: 200)
         --days          Maxium number of days to search against ticket open date (Default: 365 days)
-        -f, --full      Print generally most useful information in ticket 
+        -f, --full      Print generally most useful information in ticket
         -d, --detail    Print all known content of Extraivew ticket
         -b, --brief     Print very brief description of ticket
         -l, --last      Print last update to ticket
         -x, --xml       Print xml content of ticket
-    """ 
+    """
     args = docopt.docopt(search.__doc__)
     ret = 0
     found = 0
@@ -248,12 +248,12 @@ def search():
     EV = connect()
     max_tickets = 200
     max_days = 365
-    fields = { }              
+    fields = { }
 
     if args['--max']:
-        max_tickets= int(args['--max']) 
+        max_tickets= int(args['--max'])
     if args['DAYS']:
-        max_days  = int(args['DAYS'])  
+        max_days  = int(args['DAYS'])
     if args['GROUP']:
         fields['*HELP_ASSIGN_GROUP'] = args['GROUP']
     if args['USER']:
@@ -262,9 +262,12 @@ def search():
         fields['keyword'] = args['KEYWORD']
     if args['STATUS']:
         fields['*STATUS'] = args['STATUS']
+    if args['STATUS'] is None:
+        fields['STATUS'] = "STALLED;TRANSFERRED;ASSIGNED"
 
     fields['date'] = '-%s' % (datetime.isoformat( datetime.today() - timedelta(days=1) ))
- 
+
+
     result = EV.search(fields, max_tickets)
     for ticket in result.iterfind('PROBLEM_RECORD'):
         found += 1
@@ -279,14 +282,16 @@ def search():
         elif args['--last']:
             dump_ticket('last', ticket)
         else:
-            dump_ticket('brief', ticket) 
+            dump_ticket('brief', ticket)
+
 
     if not found:
         ElementTree.dump(result)
         vlog(1, 'Nothing found.')
-        ret += 1 
-    
+        ret += 1
+   
     sys.exit(ret)
+
  
 def comment():
     """
