@@ -269,8 +269,8 @@ def search():
     max_days = 365
     fields = { }              
 
-    if args['--max']:
-        max_tickets= int(args['MAX']) 
+    if args['MAX']:
+        max_tickets= int(args['MAX'])
     if args['DAYS']:
         max_days  = int(args['DAYS'])  
     if args['GROUP']:
