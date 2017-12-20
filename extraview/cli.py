@@ -27,7 +27,8 @@
 #INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
 #WHETHER IN CONTRACT, STRICT LIABILITY,
 #OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-#OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  import sys
+#OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+import sys
 import os
 import sys
 import json
@@ -68,10 +69,22 @@ def dump_ticket(dump_format, xml):
             return "None"
         else:
             return arg.text
+    def dump_csv():
+        """ Prints brief title in CSV format for ticket """
+        print(
+            "%s;%s;%s;%s;%s;%s;%s" % (
+                id,
+                status,
+                group,
+                user,
+                host,
+                vticket,
+                desc,
+        ))
     def dump_title():
         """ Prints brief title for ticket """
         print(
-            "{0: <10} {1: >15} {2: >10}/{3: <10} {4: >20} {5: >20} {6: <100}".format(
+           "{0: <10} {1: >15} {2: >10}/{3: <10} {4: >20} {5: >20} {6: <100}".format(
                 id,
                 status,
                 group,
@@ -149,6 +162,8 @@ def dump_ticket(dump_format, xml):
     
     if dump_format == "xml":
         ElementTree.dump(xml)
+    elif dump_format == "csv":
+        dump_csv()
     elif dump_format == "brief":
         dump_title()
     elif dump_format == "full":
@@ -169,7 +184,7 @@ def view():
 
     Usage:
         ev_view ID...
-        ev_view [-b | --brief | -l | --last | -d | --detail | -x | --xml | -f | --full] ID...
+        ev_view [ -c | --csv | -b | --brief | -l | --last | -d | --detail | -x | --xml | -f | --full] ID...
         ev_view (-h | --help)
 
     Arguments:
@@ -180,6 +195,7 @@ def view():
         -f, --full      Print generally most useful information in ticket 
         -d, --detail    Print all known content of Extraivew ticket
         -b, --brief     Print very brief description of ticket
+        -c, --csv       Print very brief description of ticket in csv format
         -l, --last      Print last update to ticket
         -x, --xml       Print xml content of ticket
     """ 
@@ -202,6 +218,8 @@ def view():
                     dump_ticket('full', result)
                 elif args['--last']:
                     dump_ticket('last', result)
+                elif args['--csv']:
+                    dump_ticket('csv', result)
                 else:
                     dump_ticket('brief', result)
             else:
@@ -217,27 +235,28 @@ def search():
     Search Extraview Tickets
 
     Usage:
-        ev_search [-b | --brief | -l | --last | -d | --detail | -x | --xml | -f | --full] GROUP [USER] [KEYWORD] [STATUS]
-        ev_search (-b | --brief | -l | --last | -d | --detail | -x | --xml | -f | --full) [-g GROUP | --group GROUP] [-u USER | --user USER] [-k KEYWORD | --keyword KEYWORD] [-s STATUS | --status STATUS] [-m MAX | --max MAX] [--days DAYS]
+        ev_search [-c | --csv | -b | --brief | -l | --last | -d | --detail | -x | --xml | -f | --full] GROUP [USER] [KEYWORD] [STATUS]
+        ev_search (-c | --csv | -b | --brief | -l | --last | -d | --detail | -x | --xml | -f | --full) [-g GROUP | --group GROUP] [-u USER | --user USER] [-k KEYWORD | --keyword KEYWORD] [-s STATUS | --status STATUS] [-m MAX | --max MAX] [--days DAYS]
         ev_search (-h | --help)
 
     Arguments:
         GROUP           Search for tickets assigned to this group
         USER            Search for tickets assigned to this user
         KEYWORD         Search for any ticket with this keyword
-        STATUS          Search for any ticket with this status. Can be Assigned, Transferred, Stalled, or Closed.
+        STATUS          Search for any ticket with this status. Can be Assigned, Transferred, Stalled, Closed, or All.
 
     Options:
         -h, --help
-        -g, --group     Search for tickets assigned to this group
-        -u, --user      Search for tickets assigned to this user
-        -k, --keyword   Search for any ticket with this keyword.
-        -s, --status    Can be Assigned, Transferred, Stalled, Closed, or All.
+        -g, --group     Search for tickets assigned to this group 
+        -u, --user      Search for tickets assigned to this user 
+        -k, --keyword   Search for any ticket with this keyword. 
+        -s, --status    Search for any ticket with this status.
         -m, --max       Maxium number of tickets to search against (Default: 200)
         --days          Maxium number of days to search against ticket open date (Default: 365 days)
         -f, --full      Print generally most useful information in ticket
         -d, --detail    Print all known content of Extraivew ticket
         -b, --brief     Print very brief description of ticket
+        -c, --csv       Print very brief description of ticket in csv format
         -l, --last      Print last update to ticket
         -x, --xml       Print xml content of ticket
     """
@@ -267,7 +286,6 @@ def search():
 
     fields['date'] = '-%s' % (datetime.isoformat( datetime.today() - timedelta(days=1) ))
 
-
     result = EV.search(fields, max_tickets)
     for ticket in result.iterfind('PROBLEM_RECORD'):
         found += 1
@@ -275,6 +293,8 @@ def search():
             dump_ticket('xml', ticket)
         elif args['--brief']:
             dump_ticket('brief', ticket)
+        elif args['--csv']:
+            dump_ticket('csv', ticket)
         elif args['--detail']:
             dump_ticket('detail', ticket)
         elif args['--full']:
@@ -283,7 +303,6 @@ def search():
             dump_ticket('last', ticket)
         else:
             dump_ticket('brief', ticket)
-
 
     if not found:
         ElementTree.dump(result)
