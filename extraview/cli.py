@@ -181,7 +181,15 @@ def dump_ticket(dump_format, xml):
 def print_header(type):
      """ Print a head for --brief """
      if 'brief' in type:
-         print("{0: <10} {1: <15} {2: <20} {3: <20} {4: <20} {5: <100}".format("ID", "STATUS", "GROUP/USER", "HOST", "TICKET", "DESCRIPTION"))
+         print(
+             "{0: <10} {1: <15} {2: <20} {3: <20} {4: <20} {5: <100}".format(
+                 "ID",
+                 "STATUS",
+                 "GROUP/USER",
+                 "HOST",
+                 "TICKET",
+                 "DESCRIPTION"
+         ))
 
 def view():
     """
