@@ -250,16 +250,20 @@ def search():
         -g, --group     Search for tickets assigned to this group 
         -u, --user      Search for tickets assigned to this user 
         -k, --keyword   Search for any ticket with this keyword. 
+<<<<<<< HEAD
         -s, --status    Search for any ticket with this status.
+=======
+        -s, --status    Can be Assigned, Transferred, Stalled, Closed, or All.
+>>>>>>> 93c9e805e6d2cdb77078ecc5137150b07d339dbf
         -m, --max       Maxium number of tickets to search against (Default: 200)
         --days          Maxium number of days to search against ticket open date (Default: 365 days)
-        -f, --full      Print generally most useful information in ticket
+        -f, --full      Print generally most useful information in ticket 
         -d, --detail    Print all known content of Extraivew ticket
         -b, --brief     Print very brief description of ticket
         -c, --csv       Print very brief description of ticket in csv format
         -l, --last      Print last update to ticket
         -x, --xml       Print xml content of ticket
-    """
+    """ 
     args = docopt.docopt(search.__doc__)
     ret = 0
     found = 0
@@ -267,12 +271,17 @@ def search():
     EV = connect()
     max_tickets = 200
     max_days = 365
-    fields = { }
+    fields = { }              
 
+<<<<<<< HEAD
     if args['MAX']:
         max_tickets= int(args['MAX'])
+=======
+    if args['--max']:
+        max_tickets= int(args['MAX']) 
+>>>>>>> 93c9e805e6d2cdb77078ecc5137150b07d339dbf
     if args['DAYS']:
-        max_days  = int(args['DAYS'])
+        max_days  = int(args['DAYS'])  
     if args['GROUP']:
         fields['*HELP_ASSIGN_GROUP'] = args['GROUP']
     if args['USER']:
@@ -302,15 +311,18 @@ def search():
         elif args['--last']:
             dump_ticket('last', ticket)
         else:
+<<<<<<< HEAD
             dump_ticket('brief', ticket)
+=======
+            dump_ticket('brief', ticket) 
+>>>>>>> 93c9e805e6d2cdb77078ecc5137150b07d339dbf
 
     if not found:
         ElementTree.dump(result)
         vlog(1, 'Nothing found.')
-        ret += 1
-   
+        ret += 1 
+    
     sys.exit(ret)
-
  
 def comment():
     """
@@ -453,4 +465,4 @@ def create():
         sys.exit(0)
     else:
         sys.exit(1)
-        
+       
