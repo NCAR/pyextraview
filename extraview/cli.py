@@ -66,7 +66,7 @@ def dump_ticket(dump_format, xml):
     def totext(arg):
         """ Gets text from XML object """
         if arg is None or arg.text is None:
-            return "None"
+            return "---"
         else:
             return arg.text
     def dump_csv():
@@ -81,10 +81,10 @@ def dump_ticket(dump_format, xml):
                 vticket,
                 desc,
         ))
-    def dump_title():
+    def dump_title():	#PASS THESE VARS INSTEAD TO MAKE WORK VERSUS GLOBALS???
         """ Prints brief title for ticket """
         print(
-           "{0: <10} {1: >15} {2: >10}/{3: <10} {4: >20} {5: >20} {6: <100}".format(
+            "{0: <10} {1: <8} {2: >10}/{3: <16} {4: <20} {5: <20} {6: <100}".format(
                 id,
                 status,
                 group,
@@ -178,6 +178,11 @@ def dump_ticket(dump_format, xml):
                 for line in child.text.split("\n"):
                     print("%s: %s" % (child.tag, line))
 
+def print_header(type):
+     """ Print a head for --brief """
+     if 'brief' in type:
+         print("{0: <10} {1: <15} {2: <20} {3: <20} {4: <20} {5: <100}".format("ID", "STATUS", "GROUP/USER", "HOST", "TICKET", "DESCRIPTION"))
+
 def view():
     """
     View Extraview Ticket
@@ -201,6 +206,9 @@ def view():
     """ 
     args = docopt.docopt(view.__doc__)
     ret = 0
+
+    if args['--brief']:
+         print_header('brief')
 
     EV = connect()
     for lid in args['ID']:
@@ -227,9 +235,7 @@ def view():
                 ret += 1
     sys.exit(ret)
 
-
 #/ssg/bin/ev_search {group|} {user|} {keyword|} {status [Assigned|Transferred|Stalled|Closed]}
-
 def search():
     """
     Search Extraview Tickets
@@ -285,6 +291,9 @@ def search():
         fields['STATUS'] = "STALLED;TRANSFERRED;ASSIGNED"
 
     fields['date'] = '-%s' % (datetime.isoformat( datetime.today() - timedelta(days=1) ))
+
+    if args['--brief']:    
+         print_header('brief')
 
     result = EV.search(fields, max_tickets)
     for ticket in result.iterfind('PROBLEM_RECORD'):
