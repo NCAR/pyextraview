@@ -81,7 +81,7 @@ def dump_ticket(dump_format, xml):
                 vticket,
                 desc,
         ))
-    def dump_title():	#PASS THESE VARS INSTEAD TO MAKE WORK VERSUS GLOBALS???
+    def dump_title():
         """ Prints brief title for ticket """
         print(
             "{0: <10} {1: <8} {2: >10}/{3: <16} {4: <20} {5: <20} {6: <100}".format(
