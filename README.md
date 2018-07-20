@@ -40,8 +40,8 @@ This python module provides an wrapper API to query an existing Extraview server
     ```
 3. Add Extraview configuration 
   ```bash
-  user@host# cp contrib/extraview.json ~/extraview.json
-  user@host# vim ~/extraview.json
+  user@host# cp contrib/extraview.json ~/.extraview.json
+  user@host# vim ~/.extraview.json
   ```
 ## Configuration
 
