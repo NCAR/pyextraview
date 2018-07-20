@@ -34,7 +34,7 @@ try:
 except ImportError:
         import xml.etree.ElementTree as ET
 import re
-from .log import vlog,die_now
+from log import vlog,die_now
 from .file import read_file_first_line
 
 class client:
@@ -57,7 +57,10 @@ class client:
             }
         _params.update(params)
          
-        return requests.get(self.config['server']['url'], params=_params)
+        result = requests.get(self.config['server']['url'], params=_params)
+        vlog(3, 'extraview http get: %s -> %s' % (result.url, result.status_code))
+        vlog(4, 'extraview http get result:  %s' % (result.text))
+        return result
 
     def http_get_xml(self, params):
         """ Perform a get request against extraview that will return XML format
