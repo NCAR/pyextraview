@@ -69,7 +69,7 @@ class client:
         """
     
         r = self.http_get(params)
-        return ET.fromstring(r.text)
+        return ET.fromstring(r.text.encode('utf-8'))
         #xml.etree.ElementTree.dump(b)
     
     def split_results(self, result):
