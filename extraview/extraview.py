@@ -168,10 +168,12 @@ class client:
         """
         id = self.get_group_id(group)
         if id is None: 
+            vlog(1, 'Unable to resolve group id {}'.format(group))
             return None
     
         members = self.get_group_members(group)
         if members is None or user is None:
+            vlog(1, 'Group {} has no members'.format(group))
             return None
     
         for member, name in members.items():
@@ -181,6 +183,7 @@ class client:
         if allow_nonmember:
             return user
         else:
+            vlog(1, 'User {} is not a member of group {}'.format(user, group))
             return None
     
     def create(self, originator, group, user, title, description, fields = {}):
@@ -254,6 +257,9 @@ class client:
     
         if user:
             user = self.get_group_member(group, user);
+            if user is None:
+                vlog(1, 'Unable to resolve {}/{} to user'.format(group, user))
+                return None
     
         if grpid is None:
             return None

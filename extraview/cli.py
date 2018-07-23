@@ -356,12 +356,15 @@ def assign():
 
         result = EV.assign_group( id, args['GROUP'], args['USER'], fields)
 
-        vlog(4, 'Result: %s %s' % (result.status_code, result.text))
-        if result.status_code == requests.codes.ok and result.text.find("Exception") == -1:
-            vlog(2, 'Assigned %s' % (id))
+        if not result is None:
+            vlog(4, 'Result: %s %s' % (result.status_code, result.text))
+            if result.status_code == requests.codes.ok and result.text.find("Exception") == -1:
+                vlog(2, 'Assigned %s' % (id))
+            else:
+                vlog(1, 'Error code %s:\n%s' % (result.status_code, result.text))
+                ret += 1
         else:
-            vlog(1, 'Error code %s:\n%s' % (result.status_code, result.text))
-            ret += 1
+            vlog(1, 'Unable to assign {} to {}/{}'.format(id, args['GROUP'], args['USER']))
     sys.exit(ret)
 
 def close():
