@@ -58,8 +58,8 @@ class client:
         _params.update(params)
          
         result = requests.get(self.config['server']['url'], params=_params)
-        vlog(3, 'extraview http get: %s -> %s' % (result.url, result.status_code))
-        vlog(4, 'extraview http get result:  %s' % (result.text))
+        vlog(4, 'extraview http get: %s -> %s' % (result.url, result.status_code))
+        vlog(5, 'extraview http get result:  %s' % (result.text))
         return result
 
     def http_get_xml(self, params):
