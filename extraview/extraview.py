@@ -88,7 +88,8 @@ class client:
             data = {}
             for line in result.splitlines():
                 fields = line.split(':')
-                data[fields[0]] = fields[1]
+                if len(fields) > 2:
+                    data[fields[0]] = fields[1]
             return data
         else:
             return None
