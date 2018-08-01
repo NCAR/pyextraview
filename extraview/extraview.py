@@ -139,9 +139,10 @@ class client:
          """
     
          fields = self.get_field_allowed(field, parentfield, parentvalue)
-         for efield, evalue in fields.items():
-             if evalue.lower() == value.lower():
-                 return efield
+         if not fields is None:
+             for efield, evalue in fields.items():
+                 if evalue.lower() == value.lower():
+                     return efield
     
          return None
     
