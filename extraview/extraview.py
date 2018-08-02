@@ -34,7 +34,7 @@ try:
 except ImportError:
         import xml.etree.ElementTree as ET
 import re
-from log import vlog,die_now
+from .log import vlog,die_now
 from .file import read_file_first_line
 
 class client:
