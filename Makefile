@@ -1,11 +1,16 @@
+PIP := $(shell command -v pip3 2> /dev/null)
+ifeq (, $(shell which pip3))
+	@echo "Please specify path to python3 PIP"
+endif
+
 install:
-	pip install -r requirements.txt
-	pip install .
+	${PIP} install -r requirements.txt
+	${PIP} install .
  
 test:
 	py.test tests
 
 develop:
-	pip install --editable .
+	${PIP} install --editable .
 
 .PHONY: install test 
