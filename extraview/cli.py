@@ -84,7 +84,7 @@ def dump_ticket(dump_format, xml):
     def dump_comment(lastonly):
         print("  Description:")
         for line in xml.find("DESCRIPTION").text.split("\n"):
-            print("\t%s" % (line.encode('utf-8')))
+            print("\t{}".format(line))
 
         parse_comment(xml.find("COMMENTS").text, "Resolver Comment")
         parse_comment(xml.find("HELP_CUSTOMER_COMMENTS").text, "User Comment")
@@ -96,7 +96,7 @@ def dump_ticket(dump_format, xml):
                 for cmsg in cmsgs:
                     print("  %s %s: %s" % (dt, ctype, cmsg['user']))
                     for line in cmsg['text'].split("\n"):
-                        print("\t%s" % (line))
+                        print("\t{}".format(line))
                     if lastonly:
                         return
 
