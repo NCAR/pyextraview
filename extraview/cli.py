@@ -3,10 +3,10 @@
 #Copyright (c) 2017, University Corporation for Atmospheric Research
 #All rights reserved.
 #
-#Redistribution and use in source and binary forms, with or without
+#Redistribution and use in source and binary forms, with or without 
 #modification, are permitted provided that the following conditions are met:
 #
-#1. Redistributions of source code must retain the above copyright notice,
+#1. Redistributions of source code must retain the above copyright notice, 
 #this list of conditions and the following disclaimer.
 #
 #2. Redistributions in binary form must reproduce the above copyright notice,
@@ -17,18 +17,17 @@
 #may be used to endorse or promote products derived from this software without
 #specific prior written permission.
 #
-#THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
 #AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-#IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
 #ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-#LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-#CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-#SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-#INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+#CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+#SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+#INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
 #WHETHER IN CONTRACT, STRICT LIABILITY,
 #OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-#OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import sys
+#OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  import sys
 import os
 import sys
 import json
@@ -41,7 +40,7 @@ from . import extraview
 from .log import vlog
 import pkg_resources
 from xml.etree import ElementTree
-
+       
 def connect(config_path = os.path.expandvars("$HOME/.extraview.json")):
     """ create extraview client instance """
 
@@ -72,7 +71,7 @@ def dump_ticket(dump_format, xml):
     def dump_title():
         """ Prints brief title for ticket """
         print(
-           "{0: <10} {1: >15} {2: >10}/{3: <10} {4: >20} {5: >20} {6: <100}".format(
+            "{0: <10} {1: >15} {2: >10}/{3: <10} {4: >20} {5: >20} {6: <100}".format(
                 id,
                 status,
                 group,
@@ -80,12 +79,8 @@ def dump_ticket(dump_format, xml):
                 host,
                 vticket,
                 desc,
-        ))
+        )) 
     def dump_comment(lastonly):
-        print("  Description:")
-        for line in xml.find("DESCRIPTION").text.split("\n"):
-            print("\t{}".format(line))
-
         parse_comment(xml.find("COMMENTS").text, "Resolver Comment")
         parse_comment(xml.find("HELP_CUSTOMER_COMMENTS").text, "User Comment")
 
@@ -96,10 +91,13 @@ def dump_ticket(dump_format, xml):
                 for cmsg in cmsgs:
                     print("  %s %s: %s" % (dt, ctype, cmsg['user']))
                     for line in cmsg['text'].split("\n"):
-                        print("\t{}".format(line))
+                        print("\t%s" % (line))
                     if lastonly:
                         return
 
+        print("  Description:")
+        for line in xml.find("DESCRIPTION").text.split("\n"):
+            print("\t%s" % (line)) 
     def parse_comment(cmt, ctype):
         txt   = []
         dt    = None
@@ -110,14 +108,14 @@ def dump_ticket(dump_format, xml):
                 if dt:
                     #push new message on stack
                     msgs[dt][ctype].append({
-                        'user': user,
+                        'user': user, 
                         'text': "\n".join(txt)
                     })
                     txt = []
                     user = None
                     dt = None
 
-                #Aug 30, 2013 4:10:58 PM jirina                                                                                                                                                                                              
+                #Aug 30, 2013 4:10:58 PM jirina                                                                                                                                                                                                                           
                 user = match.group('user')
                 dt = datetime.strptime(match.group('date'), '%b %d, %Y %I:%M:%S %p')
                 if not dt in msgs:
@@ -131,9 +129,9 @@ def dump_ticket(dump_format, xml):
         if dt:
             #push last message on stack
             msgs[dt][ctype].append({
-                'user': user,
+                'user': user, 
                 'text': "\n".join(txt)
-            })
+            }) 
 
     id      = totext(xml.find('ID'))
     status  = totext(xml.find('STATUS'))
@@ -143,12 +141,12 @@ def dump_ticket(dump_format, xml):
     vticket = totext(xml.find('HELP_VENDOR_TICKET'))
     desc    = totext(xml.find('SHORT_DESCR'))
     msgs    = {} #messages by time
-
+ 
     if host is None:
         host = "-"
     if vticket is None:
         vticket = "-"
-
+    
     if dump_format == "xml":
         ElementTree.dump(xml)
     elif dump_format == "brief":
@@ -179,12 +177,12 @@ def view():
 
     Options:
         -h, --help
-        -f, --full      Print generally most useful information in ticket
+        -f, --full      Print generally most useful information in ticket 
         -d, --detail    Print all known content of Extraivew ticket
         -b, --brief     Print very brief description of ticket
         -l, --last      Print last update to ticket
         -x, --xml       Print xml content of ticket
-    """
+    """ 
     args = docopt.docopt(view.__doc__)
     ret = 0
 
@@ -227,22 +225,22 @@ def search():
         GROUP           Search for tickets assigned to this group
         USER            Search for tickets assigned to this user
         KEYWORD         Search for any ticket with this keyword
-        STATUS          Search for any ticket with this status. Can be Assigned, Transferred, Stalled, Closed, or All.
+        STATUS          Search for any ticket with this status. Can be Assigned, Transferred, Stalled, or Closed.
 
     Options:
         -h, --help
-        -g, --group     Search for tickets assigned to this group
-        -u, --user      Search for tickets assigned to this user
-        -k, --keyword   Search for any ticket with this keyword.
-        -s, --status    Search for any ticket with this status.
+        -g, --group     Search for tickets assigned to this group 
+        -u, --user      Search for tickets assigned to this user 
+        -k, --keyword   Search for any ticket with this status. Can be Assigned, Transferred, Stalled, or Closed. 
+        -s, --status    Search for tickets assigned to this group 
         -m, --max       Maxium number of tickets to search against (Default: 200)
         --days          Maxium number of days to search against ticket open date (Default: 365 days)
-        -f, --full      Print generally most useful information in ticket
+        -f, --full      Print generally most useful information in ticket 
         -d, --detail    Print all known content of Extraivew ticket
         -b, --brief     Print very brief description of ticket
         -l, --last      Print last update to ticket
         -x, --xml       Print xml content of ticket
-    """
+    """ 
     args = docopt.docopt(search.__doc__)
     ret = 0
     found = 0
@@ -250,12 +248,12 @@ def search():
     EV = connect()
     max_tickets = 200
     max_days = 365
-    fields = { }
+    fields = { }              
 
-    if args['MAX']:
-        max_tickets= int(args['MAX'])
+    if args['--max']:
+        max_tickets= int(args['--max']) 
     if args['DAYS']:
-        max_days  = int(args['DAYS'])
+        max_days  = int(args['DAYS'])  
     if args['GROUP']:
         fields['*HELP_ASSIGN_GROUP'] = args['GROUP']
     if args['USER']:
@@ -264,11 +262,9 @@ def search():
         fields['keyword'] = args['KEYWORD']
     if args['STATUS']:
         fields['*STATUS'] = args['STATUS']
-    if args['STATUS'] is None:
-        fields['STATUS'] = "STALLED;TRANSFERRED;ASSIGNED"
 
     fields['date'] = '-%s' % (datetime.isoformat( datetime.today() - timedelta(days=1) ))
-
+ 
     result = EV.search(fields, max_tickets)
     for ticket in result.iterfind('PROBLEM_RECORD'):
         found += 1
@@ -283,23 +279,22 @@ def search():
         elif args['--last']:
             dump_ticket('last', ticket)
         else:
-            dump_ticket('brief', ticket)
+            dump_ticket('brief', ticket) 
 
     if not found:
         ElementTree.dump(result)
         vlog(1, 'Nothing found.')
-        ret += 1
-
+        ret += 1 
+    
     sys.exit(ret)
-
-
+ 
 def comment():
     """
     Add Resolver Comment to Extraview Ticket
 
     Usage:
         ev_comment ID COMMENT
-        ev_comment (-i ID | --id ID) (-c COMMENT | --comment COMMENT)
+        ev_comment (-i ID | --id ID) (-c COMMENT | --comment COMMENT) 
         ev_comment (-h | --help)
 
     Arguments:
@@ -308,7 +303,7 @@ def comment():
 
     Options:
         -h, --help
-    """
+    """ 
     args = docopt.docopt(comment.__doc__)
     ret = 0
 
@@ -323,7 +318,7 @@ def comment():
             vlog(1, 'Error code %s:\n%s' % (result.status_code, result.text))
             ret += 1
     sys.exit(ret)
-
+ 
 def assign():
     """
     Assign Extraview Ticket
@@ -342,7 +337,7 @@ def assign():
 
     Options:
         -h, --help
-    """
+    """ 
     args = docopt.docopt(assign.__doc__)
     ret = 0
 
@@ -353,20 +348,17 @@ def assign():
             fields['*PRIORITY'] = args['PRIORITY']
         if args['COMMENT']:
             fields['COMMENTS'] = args['COMMENT']
-
+         
         result = EV.assign_group( id, args['GROUP'], args['USER'], fields)
 
-        if not result is None:
-            vlog(4, 'Result: %s %s' % (result.status_code, result.text))
-            if result.status_code == requests.codes.ok and result.text.find("Exception") == -1:
-                vlog(2, 'Assigned %s' % (id))
-            else:
-                vlog(1, 'Error code %s:\n%s' % (result.status_code, result.text))
-                ret += 1
+        vlog(4, 'Result: %s %s' % (result.status_code, result.text))
+        if result.status_code == requests.codes.ok and result.text.find("Exception") == -1:
+            vlog(2, 'Assigned %s' % (id))
         else:
-            vlog(1, 'Unable to assign {} to {}/{}'.format(id, args['GROUP'], args['USER']))
+            vlog(1, 'Error code %s:\n%s' % (result.status_code, result.text))
+            ret += 1
     sys.exit(ret)
-
+ 
 def close():
     """
     Close Extraview Ticket
@@ -382,14 +374,15 @@ def close():
 
     Options:
         -h, --help
-    """
+    """ 
     args = docopt.docopt(close.__doc__)
-    ret = 0
+    result = 0
 
     EV = connect()
     for id in args['ID'].split(','):
-        result = EV.close( id, args['COMMENT'] )
+        ret = EV.close( id, args['COMMENT'] )
 
+        vlog(4, 'Result: %s %s' % (result.status_code, result.text))
         if result.status_code == requests.codes.ok and result.text.find("Exception") == -1:
             vlog(2, 'Closed %s' % (id))
         else:
@@ -416,7 +409,7 @@ def create():
 
     Options:
         -h, --help
-    """
+    """ 
     args = docopt.docopt(create.__doc__)
 
     fields = {}
@@ -437,3 +430,4 @@ def create():
         sys.exit(0)
     else:
         sys.exit(1)
+        
